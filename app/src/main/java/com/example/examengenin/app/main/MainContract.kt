@@ -10,8 +10,9 @@ interface MainContract {
         fun showTaskInUI(tasks: List<Task>)
         fun errorShowingTasks()
         fun saveLastIdCache(lastId: Int)
-        fun removeTask(task: Task)
+        fun removeTaskAdapter(task: Task, tasks: List<Task>)
         fun errorRemovingTask()
+        fun updateLastId(newId: Int)
     }
 
     interface Presenter : BasePresenter {

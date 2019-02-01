@@ -20,6 +20,8 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
     private var lastId: Int? = null
     private var tasks: List<Task> = ArrayList()
 
+    private var initView = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -86,8 +88,14 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
     }
 
     override fun showTaskInUI(tasks: List<Task>) {
+
         this.tasks = tasks
         adapter.setItems(tasks)
+
+    }
+
+    override fun updateLastId(newId: Int) {
+        if (lastId != null) lastId = lastId!! + 1
     }
 
     override fun errorShowingTasks() {
@@ -95,6 +103,12 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
     }
 
     override fun removeTask(task: Task) {
+        presenter.removeLocalTask(task)
+    }
+
+    override fun removeTaskAdapter(task: Task, tasks: List<Task>) {
+        // Update tasks
+        this.tasks = tasks
         adapter.removeTask(task)
     }
 

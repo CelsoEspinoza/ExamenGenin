@@ -25,8 +25,9 @@ class MainPresenter(
 
     override fun addLocalTask(lastId: Int, tasks: List<Task>) {
         taskRepository.addLocalTask(lastId, tasks, object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>) {
+            override fun onSuccess(tasks: List<Task>, newId: Int) {
                 view?.showTaskInUI(tasks)
+                view?.updateLastId(newId)
             }
 
             override fun onFailure() {
@@ -37,7 +38,7 @@ class MainPresenter(
 
     override fun obtainLocalTasks() {
         taskRepository.obtainLocalTasks(object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>) {
+            override fun onSuccess(tasks: List<Task>, newId: Int) {
                 view?.showTaskInUI(tasks)
             }
 
@@ -49,8 +50,8 @@ class MainPresenter(
 
     override fun removeLocalTask(task: Task) {
         taskRepository.removeLocalTask(task, object : TaskDataSource.TaskRemoveCallback {
-            override fun onSuccess(task: Task) {
-                view?.removeTask(task)
+            override fun onSuccess(task: Task, tasks: List<Task>) {
+                view?.removeTaskAdapter(task, tasks)
             }
 
             override fun onFailure() {

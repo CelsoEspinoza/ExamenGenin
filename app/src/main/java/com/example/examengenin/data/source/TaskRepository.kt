@@ -24,8 +24,8 @@ class TaskRepository(
 
     override fun addLocalTask(lastId: Int, tasks: List<Task>, callback: TaskDataSource.TaskCallback) {
         taskLocalDataSource.addLocalTask(lastId, tasks, object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>) {
-                callback.onSuccess(tasks)
+            override fun onSuccess(tasks: List<Task>, newId: Int) {
+                callback.onSuccess(tasks, newId)
             }
 
             override fun onFailure() {
@@ -36,7 +36,7 @@ class TaskRepository(
 
     override fun obtainLocalTasks(callback: TaskDataSource.TaskCallback) {
         taskLocalDataSource.obtainLocalTasks(object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>) {
+            override fun onSuccess(tasks: List<Task>, newId: Int) {
                 callback.onSuccess(tasks)
             }
 
@@ -48,8 +48,8 @@ class TaskRepository(
 
     override fun removeLocalTask(task: Task, callback: TaskDataSource.TaskRemoveCallback) {
         taskLocalDataSource.removeLocalTask(task, object : TaskDataSource.TaskRemoveCallback {
-            override fun onSuccess(task: Task) {
-                callback.onSuccess(task)
+            override fun onSuccess(task: Task, tasks: List<Task>) {
+                callback.onSuccess(task, tasks)
             }
 
             override fun onFailure() {

@@ -71,7 +71,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
             itemView.apply {
                 tag = task
 
-                m_text_todo_name.text = task.title + "$id"
+                m_text_todo_name.text = task.title
             }
 
         }

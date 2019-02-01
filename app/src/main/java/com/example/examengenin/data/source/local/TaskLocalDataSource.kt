@@ -38,10 +38,11 @@ class TaskLocalDataSource(
 
         val tasksString = Gson().toJson(tasksToSave)
         editor.putString(KEY_TASK, tasksString)
+        editor.putInt(KEY_LAST_ID, newId)
 
         editor.apply()
 
-        callback.onSuccess(tasksToSave)
+        callback.onSuccess(tasksToSave, newId)
     }
 
     private fun getLocalTasks(): List<Task>? {
@@ -77,7 +78,7 @@ class TaskLocalDataSource(
 
                 editor.apply()
 
-                callback.onSuccess(task)
+                callback.onSuccess(task, array)
 
             } else {
                 callback.onFailure()

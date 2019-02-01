@@ -5,7 +5,7 @@ import com.example.examengenin.data.entity.Task
 interface TaskDataSource {
 
     interface TaskCallback {
-        fun onSuccess(tasks: List<Task>)
+        fun onSuccess(tasks: List<Task>, newId: Int = 0)
         fun onFailure()
     }
 
@@ -14,7 +14,7 @@ interface TaskDataSource {
     }
 
     interface TaskRemoveCallback {
-        fun onSuccess(task: Task)
+        fun onSuccess(task: Task, tasks: List<Task>)
         fun onFailure()
     }
 
