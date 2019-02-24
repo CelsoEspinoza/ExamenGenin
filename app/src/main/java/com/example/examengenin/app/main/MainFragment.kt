@@ -15,17 +15,12 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
 
     private val adapter = MainAdapter()
-    override lateinit var presenter: MainContract.Presenter
-
-    private var lastId: Int? = null
-    private var tasks: List<Task> = ArrayList()
-
-    private var initView = true
+                                override lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            // TODO
+            // none
         }
     }
 
@@ -56,7 +51,7 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
 
         m_floating.setOnClickListener {
 
-            addTodoItem()
+            addTask()
 
         }
 
@@ -68,12 +63,11 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
 
     }
 
-    private fun addTodoItem() {
+    private fun addTask() {
 
-        if (lastId != null)
-            presenter.addLocalTask(lastId!!, tasks)
-        else
-            showMessage("Intente nuevamente")
+        adapter.addTask()
+
+        showNoTasksAvailable(false)
 
     }
 
@@ -81,46 +75,36 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
-    override fun saveLastIdCache(lastId: Int) {
+    override fun showTasksInUI(tasks: List<Task>, lastId: Int) {
 
-        this.lastId = lastId
+        adapter.currentTaskId = lastId
 
-    }
-
-    override fun showTaskInUI(tasks: List<Task>) {
-
-        this.tasks = tasks
         adapter.setItems(tasks)
-
-    }
-
-    override fun updateLastId(newId: Int) {
-        if (lastId != null) lastId = lastId!! + 1
     }
 
     override fun errorShowingTasks() {
         showMessage("No fue posible mostrar los tasks")
     }
 
-    override fun removeTask(task: Task) {
-        presenter.removeLocalTask(task)
+    override fun showNoTasksAvailable(show: Boolean) {
+        m_text_no_tasks.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    override fun removeTaskAdapter(task: Task, tasks: List<Task>) {
-        // Update tasks
-        this.tasks = tasks
-        adapter.removeTask(task)
+    override fun isEmpty(empty: Boolean) {
+        showNoTasksAvailable(empty)
     }
 
-    override fun errorRemovingTask() {
-        showMessage("No fue posible remover el item")
+    override fun onPause() {
+        super.onPause()
+
+        presenter.saveTasks(adapter.tasks, adapter.currentTaskId)
     }
 
     companion object {
         fun newInstance() =
                 MainFragment().apply {
                     arguments = Bundle().apply {
-                        //TODO
+                        // none
                     }
                 }
     }

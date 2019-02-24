@@ -18,16 +18,16 @@ class MainPresenter(
     override fun obtainLastId() {
         taskRepository.obtainLastId(object : TaskDataSource.TaskLastIdCallback {
             override fun onSuccess(lastId: Int) {
-                view?.saveLastIdCache(lastId)
+                obtainTasks(lastId)
             }
         })
     }
 
-    override fun addLocalTask(lastId: Int, tasks: List<Task>) {
-        taskRepository.addLocalTask(lastId, tasks, object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>, newId: Int) {
-                view?.showTaskInUI(tasks)
-                view?.updateLastId(newId)
+    override fun obtainTasks(lastId: Int) {
+        taskRepository.obtainTasks(object : TaskDataSource.TaskCallback {
+            override fun onSuccess(tasks: List<Task>) {
+                view?.showNoTasksAvailable(tasks.isEmpty())
+                view?.showTasksInUI(tasks, lastId)
             }
 
             override fun onFailure() {
@@ -36,33 +36,17 @@ class MainPresenter(
         })
     }
 
-    override fun obtainLocalTasks() {
-        taskRepository.obtainLocalTasks(object : TaskDataSource.TaskCallback {
-            override fun onSuccess(tasks: List<Task>, newId: Int) {
-                view?.showTaskInUI(tasks)
-            }
-
-            override fun onFailure() {
-                view?.errorShowingTasks()
-            }
-        })
+    override fun saveTasks(tasks: List<Task>, lastId: Int) {
+        taskRepository.saveTasks(tasks)
+        saveLastId(lastId)
     }
 
-    override fun removeLocalTask(task: Task) {
-        taskRepository.removeLocalTask(task, object : TaskDataSource.TaskRemoveCallback {
-            override fun onSuccess(task: Task, tasks: List<Task>) {
-                view?.removeTaskAdapter(task, tasks)
-            }
-
-            override fun onFailure() {
-                view?.errorRemovingTask()
-            }
-        })
+    private fun saveLastId(lastId: Int) {
+        taskRepository.saveLastId(lastId)
     }
 
     override fun start() {
         obtainLastId()
-        obtainLocalTasks()
     }
 
     override fun detach() {

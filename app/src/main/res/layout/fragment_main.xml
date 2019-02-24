@@ -6,34 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".app.main.MainFragment">
 
+    <android.support.design.widget.AppBarLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <android.support.v7.widget.Toolbar
+                app:title="TASK LIST"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
     <TextView
-            android:layout_width="265dp"
-            android:layout_height="33dp"
-            android:text="TODO LIST"
+            android:id="@+id/m_text_no_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="No hay tasks registrados"
             android:gravity="center"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" android:id="@+id/textView"
-            tools:ignore="HardcodedText"/>
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="HardcodedText"
+            android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/m_recycler_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:paddingBottom="64dp"
         tools:listitem="@layout/row_items"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-                android:id="@+id/m_floating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_plus"/>
-
-    </FrameLayout>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/m_floating"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="1.0"/>
 
 </android.support.constraint.ConstraintLayout>

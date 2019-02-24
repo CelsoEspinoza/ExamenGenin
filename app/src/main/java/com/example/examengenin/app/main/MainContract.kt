@@ -7,20 +7,16 @@ import com.example.examengenin.data.entity.Task
 interface MainContract {
 
     interface View : BaseView<Presenter> {
-        fun showTaskInUI(tasks: List<Task>)
+        fun showTasksInUI(tasks: List<Task>, lastId: Int = 0)
         fun errorShowingTasks()
-        fun saveLastIdCache(lastId: Int)
-        fun removeTaskAdapter(task: Task, tasks: List<Task>)
-        fun errorRemovingTask()
-        fun updateLastId(newId: Int)
+        fun showNoTasksAvailable(show: Boolean)
     }
 
     interface Presenter : BasePresenter {
 
         fun obtainLastId()
-        fun obtainLocalTasks()
-        fun addLocalTask(lastId: Int, tasks: List<Task>)
-        fun removeLocalTask(task: Task)
+        fun obtainTasks(lastId: Int)
+        fun saveTasks(tasks: List<Task>, lastId: Int)
 
     }
 
