@@ -8,20 +8,13 @@ interface TaskDataSource {
         fun onSuccess(tasks: List<Task>)
         fun onFailure()
     }
+    fun obtainTasks(callback: TaskCallback)
+    fun saveTasks(tasks: List<Task>)
 
     interface TaskLastIdCallback {
         fun onSuccess(lastId: Int)
     }
-
-    interface TaskRemoveCallback {
-        fun onSuccess(task: Task)
-        fun onFailure()
-    }
-
     fun obtainLastId(callback: TaskLastIdCallback)
-
-    fun addLocalTask(lastId: Int, tasks: List<Task>, callback: TaskCallback)
-    fun obtainLocalTasks(callback: TaskCallback)
-    fun removeLocalTask(task: Task, callback: TaskRemoveCallback)
+    fun saveLastId(lastId: Int)
 
 }

@@ -11,42 +11,41 @@ import kotlinx.android.synthetic.main.row_items.view.*
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
 
-    private var items: ArrayList<Task> = arrayListOf()
     var listener: TaskListener? = null
+
+    var tasks: ArrayList<Task> = arrayListOf()
+    var currentTaskId = 0
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.row_items, p0, false)
         return ViewHolder(v)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = tasks.size
 
     override fun onBindViewHolder(holder: ViewHolder, p1: Int) {
 
-        val task = items[p1]
+        val task = tasks[p1]
         holder.bindTo(task)
 
     }
 
     fun setItems(items: List<Task>) {
-        this.items.clear()
-        this.items.addAll(items)
+        this.tasks.clear()
+        this.tasks.addAll(items)
         notifyDataSetChanged()
     }
 
-    fun addTodoListItem(lastId: Int) {
-
-        val newId = lastId + 1
-
-        items.add(Task(newId, "TODO $newId"))
-
+    fun addTask() {
+        this.tasks.add(Task(++currentTaskId, "Task"))
         notifyDataSetChanged()
-
     }
 
     fun removeTask(task: Task) {
 
-        items.remove(task)
+        tasks.remove(task)
+
+        listener?.isEmpty(tasks.isEmpty())
 
         notifyDataSetChanged()
     }
@@ -57,9 +56,9 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
 
             itemView.m_btn_close.setOnClickListener {
 
-                val task = itemView.tag as Task
+                val task = tasks[adapterPosition]
 
-                listener?.removeTask(task)
+                removeTask(task)
 
             }
 
@@ -69,15 +68,13 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
         fun bindTo(task: Task) {
 
             itemView.apply {
-                tag = task
-
-                m_text_todo_name.text = task.title + "$id"
+                m_text_todo_name.text = "${task.title}-${task.id}"
             }
 
         }
     }
 
     interface TaskListener {
-        fun removeTask(task: Task)
+        fun isEmpty(empty: Boolean)
     }
 }

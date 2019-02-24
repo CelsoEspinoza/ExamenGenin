@@ -6,6 +6,7 @@ import com.example.examengenin.data.entity.Task
 import com.example.examengenin.data.source.TaskDataSource
 import com.example.examengenin.util.fromJson
 import com.google.gson.Gson
+import java.lang.Exception
 
 class TaskLocalDataSource(
         private val sharedPreferences: SharedPreferences
@@ -28,32 +29,20 @@ class TaskLocalDataSource(
         callback.onSuccess(id)
     }
 
-    override fun addLocalTask(lastId: Int, tasks: List<Task>, callback: TaskDataSource.TaskCallback) {
-        val editor = sharedPreferences.edit()
-
-        val tasksToSave = ArrayList<Task>()
-        tasksToSave.addAll(tasks)
-        val newId = lastId + 1
-        tasksToSave.add(Task(newId, "TODO $newId"))
-
-        val tasksString = Gson().toJson(tasksToSave)
-        editor.putString(KEY_TASK, tasksString)
-
-        editor.apply()
-
-        callback.onSuccess(tasksToSave)
-    }
-
     private fun getLocalTasks(): List<Task>? {
-        val tasksString = sharedPreferences.getString(KEY_TASK, "")
-        return if (tasksString != null && tasksString != "") {
-            Gson().fromJson(tasksString)
+        val tasksString = sharedPreferences.getString(KEY_TASK, "[]")
+        return if (tasksString != null) {
+            try {
+                Gson().fromJson<List<Task>>(tasksString)
+            } catch (e: Exception) {
+                null
+            }
         } else {
             null
         }
     }
 
-    override fun obtainLocalTasks(callback: TaskDataSource.TaskCallback) {
+    override fun obtainTasks(callback: TaskDataSource.TaskCallback) {
         val tasks = getLocalTasks()
         if (tasks != null)
             callback.onSuccess(tasks)
@@ -61,29 +50,18 @@ class TaskLocalDataSource(
             callback.onFailure()
     }
 
-    override fun removeLocalTask(task: Task, callback: TaskDataSource.TaskRemoveCallback) {
-        val tasks = getLocalTasks()
-        if (tasks != null) {
-            val array = ArrayList<Task>()
-            array.addAll(tasks)
-            array.remove(task)
+    override fun saveTasks(tasks: List<Task>) {
+        val editor = sharedPreferences.edit()
 
-            if (array.size != tasks.size) {
+        val tasksString = Gson().toJson(tasks)
+        editor.putString(KEY_TASK, tasksString)
 
-                val editor = sharedPreferences.edit()
+        editor.apply()
+    }
 
-                val tasksString = Gson().toJson(array)
-                editor.putString(KEY_TASK, tasksString)
-
-                editor.apply()
-
-                callback.onSuccess(task)
-
-            } else {
-                callback.onFailure()
-            }
-        } else {
-            callback.onFailure()
-        }
+    override fun saveLastId(lastId: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt(KEY_LAST_ID, lastId)
+        editor.apply()
     }
 }
