@@ -80,7 +80,6 @@ class MainFragment : Fragment(), MainContract.View, MainAdapter.TaskListener {
         adapter.currentTaskId = lastId
 
         adapter.setItems(tasks)
-
     }
 
     override fun errorShowingTasks() {
